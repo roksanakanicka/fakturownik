@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Historia faktur{% endblock %}
+{% block content %}
+
+<div class="container bg-white p-4 rounded shadow-sm">
+    <h2 class="mb-4">Historia wystawionych faktur</h2>
+
+    {% if faktury %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Numer</th>
+                        <th>Data</th>
+                        <th>Typ klienta</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Firma</th>
+                        <th>NIP</th>
+                        <th>Opis</th>
+                        <th>Netto</th>
+                        <th>VAT</th>
+                        <th>Brutto</th>
+                        <th>Akcja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for faktura in faktury %}
+                    <tr>
+                        {% for pole in faktura %}
+                        <td>{{ pole }}</td>
+                        {% endfor %}
+                        <td>
+                            <form action="/usun" method="post">
+                                <input type="hidden" name="numer_faktury" value="{{ faktura[0] }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">Brak zapisanych faktur.</div>
+    {% endif %}
+</div>
+
+{% endblock %}

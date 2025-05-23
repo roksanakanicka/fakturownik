@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Dodaj klienta</h2>
+    <form action="/dodaj_klienta" method="post" class="mb-4">
+        <div class="mb-3">
+            <label class="form-label">Typ klienta</label>
+            <select name="typ_klienta" class="form-select">
+                <option value="osoba">Osoba fizyczna</option>
+                <option value="firma">Firma</option>
+            </select>
+        </div>
+        <div class="mb-3"><input class="form-control" name="imie" placeholder="Imię (jeśli osoba)" /></div>
+        <div class="mb-3"><input class="form-control" name="nazwisko" placeholder="Nazwisko (jeśli osoba)" /></div>
+        <div class="mb-3"><input class="form-control" name="nazwa_firmy" placeholder="Nazwa firmy (jeśli firma)" /></div>
+        <div class="mb-3"><input class="form-control" name="nip" placeholder="NIP (jeśli firma)" /></div>
+        <div class="mb-3"><input class="form-control" name="adres" placeholder="Adres" /></div>
+        <button type="submit" class="btn btn-primary">Dodaj klienta</button>
+    </form>
+
+    <h3>Lista klientów</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Typ</th><th>Imię</th><th>Nazwisko</th><th>Firma</th><th>NIP</th><th>Adres</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for klient in klienci %}
+            <tr>
+                {% for dane in klient %}
+                <td>{{ dane }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

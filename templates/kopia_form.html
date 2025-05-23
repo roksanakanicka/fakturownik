@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generowanie faktury</title>
+    <script>
+        function toggleFields() {
+            const typ = document.querySelector('input[name="typ_klienta"]:checked').value;
+            document.getElementById('dane_osobowe').style.display = typ === 'osoba' ? 'block' : 'none';
+            document.getElementById('dane_firmy').style.display = typ ==='firma' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body onload="toggleFields()">
+
+    <h2>Wprowadź dane do faktury</h2>
+    
+    <form action="/generate" method="post">
+        <label>Typ klienta:</label><br>
+        <input type="radio" name="typ_klienta" value="osoba" checked onclick="toggleFields()"> Osoba fizyczna<br>
+        <input type="radio" name="typ_klienta" value="firma" onclick="toggleFields()"> Firma<br><br>
+
+        <!-- Sekcja osoby fizycznej -->
+        <div id="dane_osobowe">
+            <label>Imię klienta:</label>
+            <input type="text" name="imie"><br><br>
+
+            <label>Nazwisko klienta:</label>
+            <input type="text" name="nazwisko"><br><br>
+
+            <label>Adres klienta:</label>
+            <input type="text" name="adres_klienta"><br><br>
+        </div>
+
+        <!-- Sekcja firmy -->
+        <div id="dane_firmy" style="display:none;">
+            <label>Nazwa firmy:</label>
+            <input type="text" name="nazwa_firmy"><br><br>
+
+            <label>NIP:</label>
+            <input type="text" name="nip"><br><br>
+
+            <label>Adres firmy:</label>
+            <input type="text" name="adres_klienta"><br><br>
+        </div>
+
+        <label>Kwota netto:</label>
+        <input type="number" name="kwota_netto" step="0.01"><br><br>
+
+        <label>VAT (%):</label>
+        <input type="number" name="vat" value="23"><br><br>
+
+        <label>Opis usługi:</label>
+        <input type="text" name="opis" placeholder="np. Usługa doradcza"><br><br>
+
+        <label>
+            <input type="checkbox" name="zapisz_fakture" checked>
+            Zapisz fakturę do historii
+        </label><br><br>
+
+        <button type="submit" name ="akcja" value="html">Generuj fakturę</button>
+    </form>
+
+    <hr>
+    <h3>Inne opcje</h3>
+    
+    <form action = "/historia" method="get" style="margin-top: 10px;">
+        <button type="submit">Zobacz historię faktur</button>
+    </form>
+</body>
+</html>

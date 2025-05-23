@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <title>Faktura</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+        }
+        .invoice-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        .header, .footer {
+            margin-bottom: 30px;
+        }
+        .header h2 {
+            margin: 0;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+
+    <div class="header d-flex justify-content-between">
+        <div>
+            <h2>Nazwa firmy</h2>
+            <p>ul. Przykładowa 1<br>
+            00-000 Warszawa<br>
+            NIP: {{ nip_firmy }}<br>
+            Tel. 123-456-789<br>
+            kontakt@twojafirma.pl</p>
+        </div>
+        <div class="text-end">
+            <h1>FAKTURA</h1>
+            <p><strong>Data:</strong> {{ data_wystawienia }}<br>
+            <strong>Numer:</strong> {{ numer_faktury }}<br>
+            <strong>Za:</strong> {{ opis }}</p>
+        </div>
+    </div>
+
+    <div class="section-title">Faktura dla:</div>
+    {% if typ_klienta == 'firma' %}
+        <p><strong>{{ nazwa_firmy }}</strong><br>
+        NIP: {{ nip }}<br>
+        Adres: {{ adres_klienta }}</p>
+    {% else %}
+        <p><strong>{{ imie }} {{ nazwisko }}</strong><br>
+        Adres: {{ adres_klienta }}</p>
+    {% endif %}
+
+    <div class="section-title">Szczegóły:</div>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>Kwota netto</th>
+                <td>{{ kwota_netto }} zł</td>
+            </tr>
+            <tr>
+                <th>VAT</th>
+                <td>{{ vat }}%</td>
+            </tr>
+            <tr>
+                <th>Kwota brutto</th>
+                <td><strong>{{ kwota_brutto }} zł</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer text-center text-muted">
+        <small>Wystawiono przy pomocy aplikacji Fakturownik.</small>
+    </div>
+</div>
+<div class="mt-5 text-center">
+    <a href="/" class="btn btn-secondary">Powrót do menu głównego</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

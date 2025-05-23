@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+    function toggleFields() {
+        const typ = document.querySelector('input[name="typ_klienta"]:checked').value;
+        document.getElementById('dane_osobowe').style.display = typ === 'osoba' ? 'block' : 'none';
+        document.getElementById('dane_firmy').style.display = typ === 'firma' ? 'block' : 'none';
+    }
+    
+    function wypelnijDane(select) {
+        const dane = select.value.split('|');
+        if (dane[0] === 'osoba') {
+            document.getElementById('osoba').checked = true;
+            toggleFields();
+            document.getElementById('imie').value = dane[1];
+            document.getElementById('nazwisko').value = dane[2];
+            document.getElementById('adres_klienta').value = dane[5];
+        } else {
+            document.getElementById('firma').checked = true;
+            toggleFields();
+            document.getElementById('nazwa_firmy').value = dane[3];
+            document.getElementById('nip').value = dane[4];
+            document.getElementById('adres_klienta_firma').value = dane[5];
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleFields();
+        const inputs = document.querySelectorAll("input, select");
+        inputs.forEach((el, i) => {
+            el.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const next = inputs[i + 1];
+                    if (next) next.focus();
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container bg-white p-4 rounded shadow-sm" style="max-width: 700px;" onload="toggleFields()">
+    <h2 class="mb-4">Wprowadź dane do faktury</h2>
+    
+    <form action="/generate" method="post">
+        <div class="mb-3">
+            <label class="form-label">Wybierz klienta:</label>
+            <select class="form-select" onchange="wypelnijDane(this)">
+                <option value="">-- Wybierz z listy --</option>
+                {% for k in klienci %}
+                    <option value="{{ k[0] }}|{{ k[1] }}|{{ k[2] }}|{{ k[3] }}|{{ k[4] }}|{{ k[5] }}">
+                        {% if k[0] == 'firma' %}{{ k[3] }} ({{ k[4] }}){% else %}{{ k[1] }} {{ k[2] }}{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+            <label class="form-label">Typ klienta:</label><br/>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="typ_klienta" id="osoba" value="osoba" checked onclick="toggleFields()">
+                <label class="form-check-label" for="osoba">Osoba fizyczna</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="typ_klienta" id="firma" value="firma" onclick="toggleFields()">
+                <label class="form-check-label" for="firma">Firma</label>
+            </div>
+        </div>
+
+        <div id="dane_osobowe" class="mb-3">
+            <label for="imie" class="form-label">Imię klienta:</label>
+            <input type="text" class="form-control" id="imie" name="imie" placeholder="Jan" />
+            
+            <label for="nazwisko" class="form-label mt-3">Nazwisko klienta:</label>
+            <input type="text" class="form-control" id="nazwisko" name="nazwisko" placeholder="Kowalski" />
+
+            <label for="adres_klienta" class="form-label mt-3">Adres klienta:</label>
+            <input type="text" class="form-control" id="adres_klienta" name="adres_klienta" placeholder="ul. Przykładowa 1, 00-000 Warszawa" />
+        </div>
+
+        <div id="dane_firmy" class="mb-3" style="display:none;">
+            <label for="nazwa_firmy" class="form-label">Nazwa firmy:</label>
+            <input type="text" class="form-control" id="nazwa_firmy" name="nazwa_firmy" placeholder="Firma XYZ" />
+            
+            <label for="nip" class="form-label mt-3">NIP:</label>
+            <input type="text" class="form-control" id="nip" name="nip" placeholder="1234567890" />
+            
+            <label for="adres_klienta_firma" class="form-label mt-3">Adres firmy:</label>
+            <input type="text" class="form-control" id="adres_klienta_firma" placeholder="ul. Firmowa 10, 00-000 Warszawa" />
+        </div>
+
+        <div class="mb-3">
+            <label for="kwota_netto" class="form-label">Kwota netto:</label>
+            <input type="number" class="form-control" id="kwota_netto" name="kwota_netto" step="0.01" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="vat" class="form-label">VAT (%):</label>
+            <input type="number" class="form-control" id="vat" name="vat" value="23" />
+        </div>
+
+        <div class="mb-3">
+            <label for="opis" class="form-label">Opis usługi:</label>
+            <input type="text" class="form-control" id="opis" name="opis" placeholder="np. Usługa doradcza" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="zapisz_fakture" name="zapisz_fakture" checked />
+            <label class="form-check-label" for="zapisz_fakture">Zapisz fakturę do historii</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Generuj fakturę</button>
+    </form>
+</div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function () {
+        if (document.getElementById("firma").checked) {
+            const adres = document.getElementById("adres_klienta_firma").value;
+            document.getElementById("adres_klienta").value = adres;
+        }
+    });
+</script>
+
+{% endblock %}
