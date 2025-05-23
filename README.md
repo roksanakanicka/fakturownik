@@ -48,6 +48,11 @@ invoices_app/
 └── README.md
 ```
 
+> **Uwaga:**  
+> W Windows PowerShell domyślnie mogą być zablokowane skrypty, co uniemożliwia aktywację wirtualnego środowiska.  
+> Zalecamy uruchamianie terminala **Git Bash** lub **CMD** albo zmiana polityki wykonania (jeśli wiesz co robisz).
+
+
 ## Autor
 
 Roksana Kanicka, 2025
